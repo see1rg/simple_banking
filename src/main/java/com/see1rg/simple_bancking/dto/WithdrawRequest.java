@@ -1,10 +1,16 @@
 package com.see1rg.simple_bancking.dto;
 
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class WithdrawRequest {
+
     String name;
+    @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
     int pin;
+    @Positive
     BigDecimal amount;
 
     public WithdrawRequest(String name, int pin, BigDecimal amount) {

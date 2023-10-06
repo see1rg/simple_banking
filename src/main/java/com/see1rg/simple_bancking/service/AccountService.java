@@ -5,30 +5,18 @@ import com.see1rg.simple_bancking.dto.DepositRequest;
 import com.see1rg.simple_bancking.dto.TransferRequest;
 import com.see1rg.simple_bancking.dto.WithdrawRequest;
 import com.see1rg.simple_bancking.entity.Account;
-import com.see1rg.simple_bancking.repository.AccountRepository;
 
 import java.util.Optional;
 
-public class AccountService {
-    private final AccountRepository accountRepository;
+public interface AccountService {
 
-    public AccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
+    Account createAccount(AccountRequest accountRequest);
 
+    Account deposit(Long id, DepositRequest depositRequest);
 
-    public Account createAccount(AccountRequest accountRequest) {
-    }
+    Optional<Account> getAllAccounts();
 
-    public Account deposit(Long id, DepositRequest depositRequest) {
-    }
+    Account withdraw(Long id, WithdrawRequest withdrawRequest);
 
-    public Optional<Account> getAllAccounts() {
-    }
-
-    public Account withdraw(Long id, WithdrawRequest withdrawRequest) {
-    }
-
-    public String transfer(TransferRequest transferRequest) {
-    }
+    String transfer(TransferRequest transferRequest);
 }

@@ -1,10 +1,15 @@
 package com.see1rg.simple_bancking.dto;
 
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class DepositRequest {
     String name;
+    @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
     int pin;
+    @Positive
     BigDecimal amount;
 
     public DepositRequest(String name, int pin, BigDecimal amount) {

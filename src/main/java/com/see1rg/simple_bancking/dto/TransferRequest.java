@@ -1,11 +1,16 @@
 package com.see1rg.simple_bancking.dto;
 
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class TransferRequest {
     Long from;
     Long to;
+    @Positive
     BigDecimal amount;
+    @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
     int pin;
 
     public TransferRequest(Long from, Long to, BigDecimal amount, int pin) {

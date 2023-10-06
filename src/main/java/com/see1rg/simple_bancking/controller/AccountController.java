@@ -1,25 +1,58 @@
 package com.see1rg.simple_bancking.controller;
 
+import com.see1rg.simple_bancking.dto.AccountRequest;
+import com.see1rg.simple_bancking.dto.DepositRequest;
+import com.see1rg.simple_bancking.dto.TransferRequest;
+import com.see1rg.simple_bancking.dto.WithdrawRequest;
 import com.see1rg.simple_bancking.entity.Account;
 import com.see1rg.simple_bancking.service.AccountService;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
+    private final Logger log = getLogger(AccountController.class);
 
     private final AccountService accountService;
-
 
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
-    @RequestMapping("/create")
-    public ResponseEntity<Account> createAccount(@RequestBody Account account) {
-        return ResponseEntity.ok(accountService.createAccount());
+    @PostMapping("/create")
+    public ResponseEntity<Account> createAccount(@RequestBody AccountRequest accountRequest) {
+        log.info("Creating account");
+        return ResponseEntity.ok(accountService.createAccount(accountRequest));
+    }
+
+    @PostMapping("/deposit/{id}")
+    public ResponseEntity<Account> deposit(@PathVariable Long id, @RequestBody DepositRequest depositRequest) {
+        log.info("Deposit");
+        return ResponseEntity.ok(accountService.deposit(id, depositRequest));
+    }
+
+    @PostMapping("/withdraw/{id}")
+    public ResponseEntity<Account> withdraw(@PathVariable Long id, @RequestBody WithdrawRequest withdrawRequest) {
+        log.info("Withdraw");
+        return ResponseEntity.ok(accountService.withdraw(id, withdrawRequest));
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transfer(@RequestBody TransferRequest transferRequest) {
+        log.info("Transfer");
+        return ResponseEntity.ok(accountService.transfer(transferRequest));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Optional<Account>> getAllAccounts() {
+        log.info("Get all accounts");
+        return ResponseEntity.ok(accountService.getAllAccounts());
     }
 }

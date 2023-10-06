@@ -5,16 +5,28 @@ import com.see1rg.simple_bancking.dto.DepositRequest;
 import com.see1rg.simple_bancking.dto.TransferRequest;
 import com.see1rg.simple_bancking.dto.WithdrawRequest;
 import com.see1rg.simple_bancking.entity.Account;
+import com.see1rg.simple_bancking.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+    private final SecureService secureService;
+    private final AccountRepository accountRepository;
+
+    public AccountServiceImpl(SecureService secureService, AccountRepository accountRepository) {
+        this.secureService = secureService;
+        this.accountRepository = accountRepository;
+    }
+
     @Override
     public Account createAccount(AccountRequest accountRequest) {
-
-        return null;
+        String encodedPin = secureService.encodePin(accountRequest.getPin());
+        Account account = new Account(accountRequest.getName(), encodedPin, new BigDecimal(1000));
+        accountRepository.save(account);
+        return account;
     }
 
     @Override

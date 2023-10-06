@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 public class DepositRequest {
     String name;
     @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
-    int pin;
+    String pin;
     @Positive
     BigDecimal amount;
 
-    public DepositRequest(String name, int pin, BigDecimal amount) {
+    public DepositRequest(String name, String pin, BigDecimal amount) {
         this.name = name;
         this.pin = pin;
         this.amount = amount;
@@ -26,11 +26,11 @@ public class DepositRequest {
         this.name = name;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 

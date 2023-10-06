@@ -11,9 +11,9 @@ public class TransferRequest {
     @Positive
     BigDecimal amount;
     @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
-    int pin;
+    String pin;
 
-    public TransferRequest(Long from, Long to, BigDecimal amount, int pin) {
+    public TransferRequest(Long from, Long to, BigDecimal amount, String pin) {
         this.from = from;
         this.to = to;
         this.amount = amount;
@@ -44,11 +44,11 @@ public class TransferRequest {
         this.amount = amount;
     }
 
-    public int getPin() {
+    public String getPin() {
         return pin;
     }
 
-    public void setPin(int pin) {
+    public void setPin(String pin) {
         this.pin = pin;
     }
 }

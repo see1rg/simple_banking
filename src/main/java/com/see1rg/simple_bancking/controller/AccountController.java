@@ -45,9 +45,10 @@ public class AccountController {
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<String> transfer(@RequestBody TransferRequest transferRequest) {
+    public ResponseEntity<Void> transfer(@RequestBody TransferRequest transferRequest) {
         log.info("Transfer");
-        return ResponseEntity.ok(accountService.transfer(transferRequest));
+        accountService.transfer(transferRequest);
+        return ResponseEntity.status(200).build();
     }
 
     @GetMapping("/all")

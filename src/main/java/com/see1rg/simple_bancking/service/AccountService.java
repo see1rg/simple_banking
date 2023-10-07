@@ -18,5 +18,5 @@ public interface AccountService {
 
     Account withdraw(Long id, WithdrawRequest withdrawRequest);
 
-    String transfer(TransferRequest transferRequest);
+    void transfer(TransferRequest transferRequest);
 }

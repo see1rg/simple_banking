@@ -7,11 +7,13 @@ import com.see1rg.simple_bancking.dto.WithdrawRequest;
 import com.see1rg.simple_bancking.entity.Account;
 import com.see1rg.simple_bancking.repository.AccountRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
     private final SecureService secureService;
     private final AccountRepository accountRepository;
@@ -24,14 +26,23 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(AccountRequest accountRequest) {
         String encodedPin = secureService.encodePin(accountRequest.getPin());
-        Account account = new Account(accountRequest.getName(), encodedPin, new BigDecimal(1000));
+        Account account = new Account(accountRequest.getName(), encodedPin, new BigDecimal(1_000_000));
         accountRepository.save(account);
         return account;
     }
 
     @Override
     public Account deposit(Long id, DepositRequest depositRequest) {
-        return null;
+        Account account = accountRepository.findById(id).orElseThrow();
+        String encodedPin = secureService.encodePin(account.getPin());
+
+        if (!secureService.checkPin(depositRequest.getPin(), encodedPin)) {
+            throw new RuntimeException("Invalid pin");
+        }
+
+        account.setBalance(account.getBalance().add(depositRequest.getAmount()));
+        accountRepository.save(account);
+        return account;
     }
 
     @Override
@@ -41,11 +52,38 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account withdraw(Long id, WithdrawRequest withdrawRequest) {
-        return null;
+        Account account = accountRepository.findById(id).orElseThrow();
+        validateAccount(account, withdrawRequest.getPin(), withdrawRequest.getAmount());
+
+        account.setBalance(account.getBalance().subtract(withdrawRequest.getAmount()));
+        accountRepository.save(account);
+        return account;
     }
 
     @Override
-    public String transfer(TransferRequest transferRequest) {
-        return null;
+    public void transfer(TransferRequest transferRequest) {
+        Account accountFrom = accountRepository.findById(transferRequest.getFrom()).orElseThrow();
+        validateAccount(accountFrom, transferRequest.getPin(), transferRequest.getAmount());
+
+        Account accountTo = accountRepository.findById(transferRequest.getTo()).orElseThrow();
+
+        accountFrom.setBalance(accountFrom.getBalance().subtract(transferRequest.getAmount()));
+        accountTo.setBalance(accountTo.getBalance().add(transferRequest.getAmount()));
+
+        accountRepository.save(accountFrom);
+        accountRepository.save(accountTo);
     }
+
+    private void validateAccount(Account account, String inputPin, BigDecimal amount) {
+        String encodedPin = secureService.encodePin(account.getPin());
+
+        if (!secureService.checkPin(inputPin, encodedPin)) {
+            throw new RuntimeException("Invalid pin");
+        }
+
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new RuntimeException("Insufficient funds");
+        }
+    }
+
 }

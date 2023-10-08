@@ -1,5 +1,6 @@
 package com.see1rg.simple_bancking.service;
 
+import com.see1rg.simple_bancking.exception.InvalidPinException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class SecureService {
 
     public void checkPin(String pin, String encodedPin) {
         if (!encoder.matches(pin, encodedPin)) {
-            throw new RuntimeException("Invalid pin");
+            throw new InvalidPinException("Invalid pin");
         }
     }
 }

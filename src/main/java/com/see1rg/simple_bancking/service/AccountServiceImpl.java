@@ -5,6 +5,7 @@ import com.see1rg.simple_bancking.dto.DepositRequest;
 import com.see1rg.simple_bancking.dto.TransferRequest;
 import com.see1rg.simple_bancking.dto.WithdrawRequest;
 import com.see1rg.simple_bancking.entity.Account;
+import com.see1rg.simple_bancking.exception.InsufficientFundsException;
 import com.see1rg.simple_bancking.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,7 @@ public class AccountServiceImpl implements AccountService {
         secureService.checkPin(inputPin, account.getPin());
 
         if (account.getBalance().compareTo(amount) < 0) {
-            throw new RuntimeException("Insufficient funds");
+            throw new InsufficientFundsException("Insufficient funds");
         }
     }
 

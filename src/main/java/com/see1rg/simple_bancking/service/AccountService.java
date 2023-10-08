@@ -6,7 +6,7 @@ import com.see1rg.simple_bancking.dto.TransferRequest;
 import com.see1rg.simple_bancking.dto.WithdrawRequest;
 import com.see1rg.simple_bancking.entity.Account;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface AccountService {
 
@@ -14,7 +14,7 @@ public interface AccountService {
 
     Account deposit(Long id, DepositRequest depositRequest);
 
-    Optional<Account> getAllAccounts();
+    List<Account> getAllAccounts();
 
     Account withdraw(Long id, WithdrawRequest withdrawRequest);
 

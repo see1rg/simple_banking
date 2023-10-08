@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Optional;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @Transactional
@@ -26,6 +27,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(AccountRequest accountRequest) {
         String encodedPin = secureService.encodePin(accountRequest.getPin());
+
         Account account = new Account(accountRequest.getName(), encodedPin, new BigDecimal(1_000_000));
         accountRepository.save(account);
         return account;
@@ -34,11 +36,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account deposit(Long id, DepositRequest depositRequest) {
         Account account = accountRepository.findById(id).orElseThrow();
-        String encodedPin = secureService.encodePin(account.getPin());
-
-        if (!secureService.checkPin(depositRequest.getPin(), encodedPin)) {
-            throw new RuntimeException("Invalid pin");
-        }
+        validateAccount(account, depositRequest.getPin(), depositRequest.getAmount());
 
         account.setBalance(account.getBalance().add(depositRequest.getAmount()));
         accountRepository.save(account);
@@ -46,9 +44,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Optional<Account> getAllAccounts() {
-        return Optional.empty();
+    public List<Account> getAllAccounts() {
+        List<Account> accounts = accountRepository.findAll();
+        return accounts.isEmpty() ? Collections.emptyList() : accounts;
     }
+
 
     @Override
     public Account withdraw(Long id, WithdrawRequest withdrawRequest) {
@@ -75,11 +75,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void validateAccount(Account account, String inputPin, BigDecimal amount) {
-        String encodedPin = secureService.encodePin(account.getPin());
-
-        if (!secureService.checkPin(inputPin, encodedPin)) {
-            throw new RuntimeException("Invalid pin");
-        }
+        secureService.checkPin(inputPin, account.getPin());
 
         if (account.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Insufficient funds");

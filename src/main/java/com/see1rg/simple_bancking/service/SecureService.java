@@ -16,8 +16,9 @@ public class SecureService {
         return encoder.encode(pin);
     }
 
-    public boolean checkPin(String pin, String encodedPin) {
-        return encoder.matches(pin, encodedPin);
+    public void checkPin(String pin, String encodedPin) {
+        if (!encoder.matches(pin, encodedPin)) {
+            throw new RuntimeException("Invalid pin");
+        }
     }
-
 }

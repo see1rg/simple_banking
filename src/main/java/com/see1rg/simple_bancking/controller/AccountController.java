@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -52,7 +52,7 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Optional<Account>> getAllAccounts() {
+    public ResponseEntity<List<Account>> getAllAccounts() {
         log.info("Get all accounts");
         return ResponseEntity.ok(accountService.getAllAccounts());
     }

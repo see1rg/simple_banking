@@ -7,16 +7,26 @@ import java.math.BigDecimal;
 
 public class WithdrawRequest {
 
+    Long id;
     String name;
     @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
     String pin;
     @Positive
     BigDecimal amount;
 
-    public WithdrawRequest(String name, String pin, BigDecimal amount) {
+    public WithdrawRequest(Long id, String name, String pin, BigDecimal amount) {
+        this.id = id;
         this.name = name;
         this.pin = pin;
         this.amount = amount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -12,11 +12,11 @@ public interface AccountService {
 
     Account createAccount(AccountRequest accountRequest);
 
-    Account deposit(Long id, DepositRequest depositRequest);
+    Account deposit(DepositRequest depositRequest);
 
     List<Account> getAllAccounts();
 
-    Account withdraw(Long id, WithdrawRequest withdrawRequest);
+    Account withdraw(WithdrawRequest withdrawRequest);
 
     void transfer(TransferRequest transferRequest);
 }

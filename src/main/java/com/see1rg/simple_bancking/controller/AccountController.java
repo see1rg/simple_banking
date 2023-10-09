@@ -14,7 +14,6 @@ import java.util.List;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
-
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -32,16 +31,16 @@ public class AccountController {
         return ResponseEntity.ok(accountService.createAccount(accountRequest));
     }
 
-    @PostMapping("/deposit/{id}")
-    public ResponseEntity<Account> deposit(@PathVariable Long id, @RequestBody DepositRequest depositRequest) {
+    @PostMapping("/deposit")
+    public ResponseEntity<Account> deposit( @RequestBody DepositRequest depositRequest) {
         log.info("Deposit");
-        return ResponseEntity.ok(accountService.deposit(id, depositRequest));
+        return ResponseEntity.ok(accountService.deposit(depositRequest));
     }
 
-    @PostMapping("/withdraw/{id}")
-    public ResponseEntity<Account> withdraw(@PathVariable Long id, @RequestBody WithdrawRequest withdrawRequest) {
+    @PostMapping("/withdraw")
+    public ResponseEntity<Account> withdraw( @RequestBody WithdrawRequest withdrawRequest) {
         log.info("Withdraw");
-        return ResponseEntity.ok(accountService.withdraw(id, withdrawRequest));
+        return ResponseEntity.ok(accountService.withdraw(withdrawRequest));
     }
 
     @PostMapping("/transfer")

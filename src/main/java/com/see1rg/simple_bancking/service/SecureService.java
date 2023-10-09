@@ -13,6 +13,7 @@ public class SecureService {
         this.encoder = encoder;
     }
 
+
     public String encodePin(String pin) {
         return encoder.encode(pin);
     }

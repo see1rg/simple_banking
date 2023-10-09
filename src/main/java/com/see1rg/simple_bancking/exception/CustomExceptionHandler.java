@@ -1,6 +1,7 @@
 package com.see1rg.simple_bancking.exception;
 
 
+import jakarta.validation.ValidationException;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,4 +37,15 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(404).body(ex.getMessage());
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<String> handleValidationException(ValidationException ex) {
+        log.error("Validation failed");
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(SameAccountTransferException.class)
+    protected ResponseEntity<Object> handleSameAccountTransferException(SameAccountTransferException ex) {
+        log.error("Same account transfer");
+        return ResponseEntity.status(400).body(ex.getMessage());
+    }
 }

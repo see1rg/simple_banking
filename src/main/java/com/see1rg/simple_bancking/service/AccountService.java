@@ -1,22 +1,18 @@
 package com.see1rg.simple_bancking.service;
 
-import com.see1rg.simple_bancking.dto.AccountRequest;
-import com.see1rg.simple_bancking.dto.DepositRequest;
-import com.see1rg.simple_bancking.dto.TransferRequest;
-import com.see1rg.simple_bancking.dto.WithdrawRequest;
-import com.see1rg.simple_bancking.entity.Account;
+import com.see1rg.simple_bancking.dto.*;
 
 import java.util.List;
 
 public interface AccountService {
 
-    Account createAccount(AccountRequest accountRequest);
+    AccountDTO createAccount(AccountRequest accountRequest);
 
-    Account deposit(DepositRequest depositRequest);
+    AccountDTO deposit(DepositRequest depositRequest);
 
-    List<Account> getAllAccounts();
+    List<AccountDTO> getAllAccounts();
 
-    Account withdraw(WithdrawRequest withdrawRequest);
+    AccountDTO withdraw(WithdrawRequest withdrawRequest);
 
     void transfer(TransferRequest transferRequest);
 }

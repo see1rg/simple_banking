@@ -1,13 +1,13 @@
 package com.see1rg.simple_bancking.controller;
 
-import com.see1rg.simple_bancking.dto.AccountRequest;
-import com.see1rg.simple_bancking.dto.DepositRequest;
-import com.see1rg.simple_bancking.dto.TransferRequest;
-import com.see1rg.simple_bancking.dto.WithdrawRequest;
-import com.see1rg.simple_bancking.entity.Account;
+import com.see1rg.simple_bancking.dto.*;
 import com.see1rg.simple_bancking.service.AccountService;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +15,7 @@ import java.util.List;
 import static org.apache.logging.log4j.LogManager.getLogger;
 
 @RestController
+@Validated
 @RequestMapping("/account")
 public class AccountController {
     private final Logger log = getLogger(AccountController.class);
@@ -26,19 +27,21 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Account> createAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody @Valid AccountRequest accountRequest,
+                                                    BindingResult bindingResult) {
+        validate(bindingResult);
         log.info("Creating account");
         return ResponseEntity.ok(accountService.createAccount(accountRequest));
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<Account> deposit( @RequestBody DepositRequest depositRequest) {
+    public ResponseEntity<AccountDTO> deposit(@RequestBody @Valid DepositRequest depositRequest) {
         log.info("Deposit");
         return ResponseEntity.ok(accountService.deposit(depositRequest));
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<Account> withdraw( @RequestBody WithdrawRequest withdrawRequest) {
+    public ResponseEntity<AccountDTO> withdraw(@RequestBody WithdrawRequest withdrawRequest) {
         log.info("Withdraw");
         return ResponseEntity.ok(accountService.withdraw(withdrawRequest));
     }
@@ -51,8 +54,14 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Account>> getAllAccounts() {
+    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
         log.info("Get all accounts");
         return ResponseEntity.ok(accountService.getAllAccounts());
+    }
+
+    public void validate(BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException("Validation failed for account creation");
+        }
     }
 }

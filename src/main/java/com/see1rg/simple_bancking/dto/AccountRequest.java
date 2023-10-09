@@ -6,10 +6,10 @@ import jakarta.validation.constraints.Size;
 
 public class AccountRequest {
     @NotBlank
-    @Size(min = 3, max = 30)
-    String name;
+    @Size(min = 3, max = 35)
+    private String name;
     @Pattern(regexp = "\\d{4}", message = "the pin must consist of 4 digits")
-    String pin;
+    private String pin;
 
     public AccountRequest(String name, String pin) {
         this.name = name;

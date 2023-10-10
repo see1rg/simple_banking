@@ -1,10 +1,13 @@
 package com.see1rg.simple_bancking.dto;
 
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class TransferRequest {
     private Long from;
     private Long to;
+    @Positive
     private BigDecimal amount;
     private String pin;
 

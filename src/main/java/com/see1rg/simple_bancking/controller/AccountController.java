@@ -3,10 +3,8 @@ package com.see1rg.simple_bancking.controller;
 import com.see1rg.simple_bancking.dto.*;
 import com.see1rg.simple_bancking.service.AccountService;
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,27 +25,25 @@ public class AccountController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<AccountDTO> createAccount(@RequestBody @Valid AccountRequest accountRequest,
-                                                    BindingResult bindingResult) {
-        validate(bindingResult);
+    public ResponseEntity<AccountDTO> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
         log.info("Creating account");
         return ResponseEntity.ok(accountService.createAccount(accountRequest));
     }
 
     @PostMapping("/deposit")
-    public ResponseEntity<AccountDTO> deposit(@RequestBody @Valid DepositRequest depositRequest) {
+    public ResponseEntity<AccountDTO> deposit(@Valid @RequestBody DepositRequest depositRequest) {
         log.info("Deposit");
         return ResponseEntity.ok(accountService.deposit(depositRequest));
     }
 
     @PostMapping("/withdraw")
-    public ResponseEntity<AccountDTO> withdraw(@RequestBody WithdrawRequest withdrawRequest) {
+    public ResponseEntity<AccountDTO> withdraw(@Valid @RequestBody WithdrawRequest withdrawRequest) {
         log.info("Withdraw");
         return ResponseEntity.ok(accountService.withdraw(withdrawRequest));
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<Void> transfer(@RequestBody TransferRequest transferRequest) {
+    public ResponseEntity<Void> transfer(@Valid @RequestBody TransferRequest transferRequest) {
         log.info("Transfer");
         accountService.transfer(transferRequest);
         return ResponseEntity.status(200).build();
@@ -59,9 +55,4 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllAccounts());
     }
 
-    public void validate(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            throw new ValidationException("Validation failed for account creation");
-        }
-    }
 }

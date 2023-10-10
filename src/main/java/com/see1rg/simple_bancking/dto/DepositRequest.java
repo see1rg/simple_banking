@@ -1,10 +1,13 @@
 package com.see1rg.simple_bancking.dto;
 
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class DepositRequest {
     private Long id;
     private String pin;
+    @Positive
     private BigDecimal amount;
 
     public DepositRequest(Long id, String pin, BigDecimal amount) {

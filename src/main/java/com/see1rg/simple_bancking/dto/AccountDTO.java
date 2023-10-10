@@ -1,10 +1,13 @@
 package com.see1rg.simple_bancking.dto;
 
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class AccountDTO {
     private Long id;
     private String name;
+    @Positive
     private BigDecimal balance;
 
     public AccountDTO(Long id, String name, BigDecimal balance) {

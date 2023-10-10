@@ -4,7 +4,6 @@ import com.see1rg.simple_bancking.dto.*;
 import com.see1rg.simple_bancking.entity.Account;
 import com.see1rg.simple_bancking.exception.AccountNotFoundException;
 import com.see1rg.simple_bancking.exception.InsufficientFundsException;
-import com.see1rg.simple_bancking.exception.InvalidAmountException;
 import com.see1rg.simple_bancking.exception.SameAccountTransferException;
 import com.see1rg.simple_bancking.mapper.AccountMapper;
 import com.see1rg.simple_bancking.repository.AccountRepository;
@@ -44,12 +43,6 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(depositRequest.getId())
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
 
-        BigDecimal amount = depositRequest.getAmount();
-
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidAmountException("Invalid amount");
-        }
-
         account.setBalance(account.getBalance().add(depositRequest.getAmount()));
         accountRepository.save(account);
         return accountMapper.toAccountDTO(account);
@@ -65,10 +58,13 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public AccountDTO withdraw( WithdrawRequest withdrawRequest) {
+    public AccountDTO withdraw(WithdrawRequest withdrawRequest) {
         Account account = accountRepository.findById(withdrawRequest.getId())
                 .orElseThrow(() -> new AccountNotFoundException("Account not found"));
-        validateAccount(account, withdrawRequest.getPin(), withdrawRequest.getAmount());
+
+        if (account.getBalance().compareTo(withdrawRequest.getAmount()) < 0) {
+            throw new InsufficientFundsException("Not enough funds, you have " + account.getBalance());
+        }
 
         account.setBalance(account.getBalance().subtract(withdrawRequest.getAmount()));
         accountRepository.save(account);
@@ -85,18 +81,6 @@ public class AccountServiceImpl implements AccountService {
         withdraw(accountMapper.toWithdrawRequest(transferRequest));
         deposit(accountMapper.toDepositRequest(transferRequest));
 
-    }
-
-    private void validateAccount(Account account, String inputPin, BigDecimal amount) {
-        secureService.checkPin(inputPin, account.getPin());
-
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InvalidAmountException("Invalid amount");
-        }
-
-        if (account.getBalance().compareTo(amount) < 0) {
-            throw new InsufficientFundsException("Not enough funds, you have " + account.getBalance());
-        }
     }
 
 }

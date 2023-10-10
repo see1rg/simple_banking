@@ -4,6 +4,6 @@
 CREATE TABLE account (
                          id BIGINT AUTO_INCREMENT,
                          name VARCHAR(35) NOT NULL,
-                         pin VARCHAR(4) NOT NULL,
+                         pin VARCHAR(65) NOT NULL,
                          balance NUMERIC
 );

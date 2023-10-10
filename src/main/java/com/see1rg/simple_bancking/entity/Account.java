@@ -1,13 +1,11 @@
 package com.see1rg.simple_bancking.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 
 
 @Entity
-@DynamicUpdate
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

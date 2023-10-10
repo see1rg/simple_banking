@@ -55,6 +55,11 @@
             <version>1.5.5.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

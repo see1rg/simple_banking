@@ -18,6 +18,10 @@ public class TransferRequest {
         this.pin = pin;
     }
 
+    public TransferRequest() {
+
+    }
+
     public Long getFrom() {
         return from;
     }

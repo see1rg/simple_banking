@@ -16,6 +16,10 @@ public class WithdrawRequest {
         this.amount = amount;
     }
 
+    public WithdrawRequest() {
+
+    }
+
     public Long getId() {
         return id;
     }

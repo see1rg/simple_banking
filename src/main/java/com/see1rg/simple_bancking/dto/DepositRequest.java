@@ -6,14 +6,16 @@ import java.math.BigDecimal;
 
 public class DepositRequest {
     private Long id;
-    private String pin;
     @Positive
     private BigDecimal amount;
 
-    public DepositRequest(Long id, String pin, BigDecimal amount) {
+    public DepositRequest(Long id, BigDecimal amount) {
         this.id = id;
-        this.pin = pin;
         this.amount = amount;
+    }
+
+    public DepositRequest() {
+
     }
 
     public Long getId() {
@@ -24,13 +26,6 @@ public class DepositRequest {
         this.id = id;
     }
 
-    public String getPin() {
-        return pin;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
 
     public BigDecimal getAmount() {
         return amount;

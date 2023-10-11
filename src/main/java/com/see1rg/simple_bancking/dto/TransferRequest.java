@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class TransferRequest {
+
     private Long from;
     private Long to;
     @Positive

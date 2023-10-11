@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static org.apache.logging.log4j.LogManager.getLogger;
 
@@ -51,7 +50,7 @@ public class AccountServiceImpl implements AccountService {
 
         account.setBalance(account.getBalance().add(depositRequest.getAmount()));
         accountRepository.save(account);
-        log.info("Deposited {} to account {}", depositRequest.getAmount(), account.getName());
+        log.info("Deposited {}", depositRequest.getAmount());
 
         return accountMapper.toAccountDTO(account);
     }
@@ -79,14 +78,14 @@ public class AccountServiceImpl implements AccountService {
         account.setBalance(account.getBalance().subtract(withdrawRequest.getAmount()));
         accountRepository.save(account);
 
-        log.info("Withdraw {} from account {}", withdrawRequest.getAmount(), account.getName());
+        log.info("Withdraw {}", withdrawRequest.getAmount());
         return accountMapper.toAccountDTO(account);
     }
 
     @Override
     @Transactional
     public void transfer(TransferRequest transferRequest) {
-        if (Objects.equals(transferRequest.getFrom(), transferRequest.getTo())) {
+        if (transferRequest.getFrom().equals(transferRequest.getTo())) {
             throw new SameAccountTransferException("The 'from' and 'to' accounts must be different.");
         }
 

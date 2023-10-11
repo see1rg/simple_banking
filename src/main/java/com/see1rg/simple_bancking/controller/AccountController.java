@@ -26,25 +26,25 @@ public class AccountController {
 
     @PostMapping("/create")
     public ResponseEntity<AccountDTO> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
-        log.info("Creating account");
+        log.info("Creating account {}", accountRequest.getName());
         return ResponseEntity.ok(accountService.createAccount(accountRequest));
     }
 
     @PostMapping("/deposit")
     public ResponseEntity<AccountDTO> deposit(@Valid @RequestBody DepositRequest depositRequest) {
-        log.info("Deposit");
+        log.info("Deposit {} id", depositRequest.getId());
         return ResponseEntity.ok(accountService.deposit(depositRequest));
     }
 
     @PostMapping("/withdraw")
     public ResponseEntity<AccountDTO> withdraw(@Valid @RequestBody WithdrawRequest withdrawRequest) {
-        log.info("Withdraw");
+        log.info("Withdraw {} id", withdrawRequest.getId());
         return ResponseEntity.ok(accountService.withdraw(withdrawRequest));
     }
 
     @PostMapping("/transfer")
     public ResponseEntity<Void> transfer(@Valid @RequestBody TransferRequest transferRequest) {
-        log.info("Transfer");
+        log.info("Transfer {} to {}", transferRequest.getFrom(), transferRequest.getTo());
         accountService.transfer(transferRequest);
         return ResponseEntity.status(200).build();
     }

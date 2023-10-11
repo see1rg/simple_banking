@@ -7,6 +7,7 @@ import com.see1rg.simple_bancking.exception.InsufficientFundsException;
 import com.see1rg.simple_bancking.exception.SameAccountTransferException;
 import com.see1rg.simple_bancking.mapper.AccountMapper;
 import com.see1rg.simple_bancking.repository.AccountRepository;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,8 +16,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 @Service
 public class AccountServiceImpl implements AccountService {
+    private final Logger log = getLogger(AccountServiceImpl.class);
     private final SecureService secureService;
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
@@ -34,6 +38,8 @@ public class AccountServiceImpl implements AccountService {
 
         Account account = new Account(accountRequest.getName(), encodedPin, new BigDecimal(1_000_000));
         accountRepository.save(account);
+        log.info("Created account {}", account.getName());
+
         return accountMapper.toAccountDTO(account);
     }
 
@@ -45,6 +51,8 @@ public class AccountServiceImpl implements AccountService {
 
         account.setBalance(account.getBalance().add(depositRequest.getAmount()));
         accountRepository.save(account);
+        log.info("Deposited {} to account {}", depositRequest.getAmount(), account.getName());
+
         return accountMapper.toAccountDTO(account);
     }
 
@@ -52,6 +60,8 @@ public class AccountServiceImpl implements AccountService {
     public List<AccountDTO> getAllAccounts() {
         List<Account> accounts = accountRepository.findAll();
         List<AccountDTO> accountsDTO = accountMapper.toAccountsDTO(accounts);
+
+        log.info("Get all accounts");
         return accounts.isEmpty() ? Collections.emptyList() : accountsDTO;
     }
 
@@ -68,6 +78,8 @@ public class AccountServiceImpl implements AccountService {
 
         account.setBalance(account.getBalance().subtract(withdrawRequest.getAmount()));
         accountRepository.save(account);
+
+        log.info("Withdraw {} from account {}", withdrawRequest.getAmount(), account.getName());
         return accountMapper.toAccountDTO(account);
     }
 

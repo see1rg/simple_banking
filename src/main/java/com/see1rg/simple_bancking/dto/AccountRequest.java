@@ -16,6 +16,10 @@ public class AccountRequest {
         this.pin = pin;
     }
 
+    public AccountRequest() {
+
+    }
+
     public String getName() {
         return name;
     }

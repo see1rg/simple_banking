@@ -27,7 +27,7 @@ public class AccountController {
     @PostMapping("/create")
     public ResponseEntity<AccountDTO> createAccount(@Valid @RequestBody AccountRequest accountRequest) {
         log.info("Creating account {}", accountRequest.getName());
-        return ResponseEntity.ok(accountService.createAccount(accountRequest));
+        return ResponseEntity.status(201).body(accountService.createAccount(accountRequest));
     }
 
     @PostMapping("/deposit")

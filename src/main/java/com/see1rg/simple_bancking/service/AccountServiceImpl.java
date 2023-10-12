@@ -23,11 +23,13 @@ public class AccountServiceImpl implements AccountService {
     private final SecureService secureService;
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final AccountAuditServiceImpl accountAuditService;
 
-    public AccountServiceImpl(SecureService secureService, AccountRepository accountRepository, AccountMapper accountMapper) {
+    public AccountServiceImpl(SecureService secureService, AccountRepository accountRepository, AccountMapper accountMapper, AccountAuditServiceImpl accountAuditService) {
         this.secureService = secureService;
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
+        this.accountAuditService = accountAuditService;
     }
 
     @Override
@@ -38,6 +40,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = new Account(accountRequest.getName(), encodedPin, new BigDecimal(1_000_000));
         accountRepository.save(account);
         log.info("Created account {}", account.getName());
+        accountAuditService.logAccountCreation(account.getName());
 
         return accountMapper.toAccountDTO(account);
     }
@@ -50,7 +53,9 @@ public class AccountServiceImpl implements AccountService {
 
         account.setBalance(account.getBalance().add(depositRequest.getAmount()));
         accountRepository.save(account);
-        log.info("Deposited {}", depositRequest.getAmount());
+
+        log.info("Deposited {} to account {}", depositRequest.getAmount(), account.getName());
+        accountAuditService.logAccountDeposit(account.getName(), depositRequest.getAmount());
 
         return accountMapper.toAccountDTO(account);
     }
@@ -78,7 +83,9 @@ public class AccountServiceImpl implements AccountService {
         account.setBalance(account.getBalance().subtract(withdrawRequest.getAmount()));
         accountRepository.save(account);
 
-        log.info("Withdraw {}", withdrawRequest.getAmount());
+        log.info("Withdraw {} from account {}", withdrawRequest.getAmount(), account.getName());
+        accountAuditService.logAccountWithdraw(account.getName(), withdrawRequest.getAmount());
+
         return accountMapper.toAccountDTO(account);
     }
 
